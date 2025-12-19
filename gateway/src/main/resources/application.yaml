@@ -1,39 +1,41 @@
 server:
-  port: 8080 # Le port d'entrée unique
+  port: 8080
 
 spring:
   application:
     name: gateway
+
   cloud:
     config:
-      enabled: false # On l'activera plus tard
-    
-    # Configuration Gateway
+      enabled: false
+
     gateway:
+      mvc:
+        routes:
+          - id: user-service-route
+            uri: http://localhost:8081
+            predicates:
+              - Path=/api/users/**
+
       discovery:
         locator:
-          enabled: true # Active la détection automatique via Eureka
-          lower-case-service-id: true # user-service devient /user-service/**
-      
-      # Routes manuelles (laisse vide pour l'instant)
-      routes: []
+          enabled: true
+          lower-case-service-id: true
 
-  # Sécurité (Préparation Keycloak)
   security:
     oauth2:
       resourceserver:
         jwt:
-          # On met une fausse URL pour que ça compile sans Keycloak lancé
-          jwk-set-uri: http://localhost:8080/realms/HumbleHomeRealm/protocol/openid-connect/certs
+          # C'est la ligne CRUCIALE qui corrige ton erreur "UnknownHostException"
+          jwk-set-uri: http://localhost:9090/realms/humble-realm/protocol/openid-connect/certs
+
+management:
+  tracing:
+    enabled: false
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
-  instance:
-    prefer-ip-address: true
-
-# Configuration pour voir les logs détaillés (utile pour débugger le routage)
-logging:
-  level:
-    org.springframework.cloud.gateway: DEBUG
+    fetch-registry: true
+    register-with-eureka: true
