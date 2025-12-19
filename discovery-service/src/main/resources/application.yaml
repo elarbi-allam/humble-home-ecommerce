@@ -6,18 +6,11 @@ spring:
     name: discovery-service
   cloud:
     config:
-      enabled: false # Désactivé pour le démarrage initial
-  
-  # SPRING SECURITY
-  # Ici, Spring va chercher les valeurs dans ton fichier .env caché
-  security:
-    user:
-      name: ${DISCOVERY_USER}
-      password: ${DISCOVERY_PASSWORD}
+      enabled: false # On laisse ça désactivé tant que tu n'as pas le Config Server
 
 eureka:
   client:
-    register-with-eureka: false
+    register-with-eureka: false # Serveur ne s'enregistre pas lui-même
     fetch-registry: false
   server:
-    wait-time-in-ms-when-sync-empty: 5
+    wait-time-in-ms-when-sync-empty: 5 # Démarrage rapide
