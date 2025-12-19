@@ -1,0 +1,39 @@
+server:
+  port: 8080 # Le port d'entrée unique
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    config:
+      enabled: false # On l'activera plus tard
+    
+    # Configuration Gateway
+    gateway:
+      discovery:
+        locator:
+          enabled: true # Active la détection automatique via Eureka
+          lower-case-service-id: true # user-service devient /user-service/**
+      
+      # Routes manuelles (laisse vide pour l'instant)
+      routes: []
+
+  # Sécurité (Préparation Keycloak)
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # On met une fausse URL pour que ça compile sans Keycloak lancé
+          jwk-set-uri: http://localhost:8080/realms/HumbleHomeRealm/protocol/openid-connect/certs
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+# Configuration pour voir les logs détaillés (utile pour débugger le routage)
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
