@@ -1,0 +1,23 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: discovery-service
+  cloud:
+    config:
+      enabled: false # Désactivé pour le démarrage initial
+  
+  # SPRING SECURITY
+  # Ici, Spring va chercher les valeurs dans ton fichier .env caché
+  security:
+    user:
+      name: ${DISCOVERY_USER}
+      password: ${DISCOVERY_PASSWORD}
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+  server:
+    wait-time-in-ms-when-sync-empty: 5
