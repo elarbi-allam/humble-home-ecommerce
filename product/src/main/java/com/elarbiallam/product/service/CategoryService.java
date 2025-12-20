@@ -40,4 +40,24 @@ public class CategoryService {
                 .map(categoryMapper::toResponse)
                 .orElseThrow(() -> new RuntimeException("Catégorie non trouvée"));
     }
+
+    @Transactional
+    public void updateCategory(Long id, CategoryRequest request) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new com.elarbiallam.product.exception.EntityNotFoundException("Catégorie non trouvée avec l'ID : " + id));
+
+        // Mise à jour des champs
+        category.setName(request.name());
+        category.setDescription(request.description());
+
+        categoryRepository.save(category);
+    }
+
+    @Transactional
+    public void deleteCategory(Long id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new com.elarbiallam.product.exception.EntityNotFoundException("Catégorie non trouvée avec l'ID : " + id);
+        }
+        categoryRepository.deleteById(id);
+    }
 }

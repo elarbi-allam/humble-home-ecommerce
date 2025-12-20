@@ -51,4 +51,18 @@ public class ProductController {
         productService.uploadImage(id, file);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductRequest request) {
+        productService.updateProduct(id, request);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
+    }
 }

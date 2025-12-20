@@ -86,5 +86,32 @@ public class ProductService {
         }
     }
 
-    // update et delete à implémenter de la même façon...
+    @Transactional
+    public void updateProduct(Long id, ProductRequest request) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Produit non trouvé avec l'ID : " + id));
+
+        Category category = categoryRepository.findById(request.categoryId())
+                .orElseThrow(() -> new EntityNotFoundException("Catégorie non trouvée"));
+
+        // Mise à jour manuelle des champs
+        product.setName(request.name());
+        product.setBrand(request.brand());
+        product.setPrice(request.price());
+        product.setInventory(request.inventory());
+        product.setDescription(request.description());
+        product.setCategory(category);
+
+        productRepository.save(product);
+    }
+
+    @Transactional
+    public void deleteProduct(Long id) {
+        if (!productRepository.existsById(id)) {
+            throw new EntityNotFoundException("Produit non trouvé avec l'ID : " + id);
+        }
+        // Grâce au CascadeType.ALL défini dans l'entité Product,
+        // les images associées seront aussi supprimées de la BDD.
+        productRepository.deleteById(id);
+    }
 }
