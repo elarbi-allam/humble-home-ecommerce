@@ -24,6 +24,10 @@ spring:
             uri: http://localhost:8083
             predicates:
               - Path=/api/cart/**
+          - id: order-service-route
+            uri: http://localhost:8084
+            predicates:
+              - Path=/api/orders/**
 
       discovery:
         locator:
