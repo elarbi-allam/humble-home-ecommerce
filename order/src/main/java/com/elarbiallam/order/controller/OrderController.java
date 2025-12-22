@@ -55,4 +55,10 @@ public class OrderController {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         return ResponseEntity.ok(orderService.getAllOrders(pageable));
     }
+
+    @PutMapping("/{orderId}/pay")
+    public ResponseEntity<Void> updateOrderStatusToPaid(@PathVariable Long orderId) {
+        orderService.payOrder(orderId);
+        return ResponseEntity.ok().build();
+    }
 }

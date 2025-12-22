@@ -131,4 +131,19 @@ public class OrderService {
                 lines
         );
     }
+
+    @Transactional
+    public void payOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new BusinessException("Commande non trouvée pour le paiement"));
+
+        // Vérification pour ne pas payer deux fois
+        if (OrderStatus.PAID.equals(order.getStatus())) {
+            throw new BusinessException("Cette commande est déjà payée");
+        }
+
+        order.setStatus(OrderStatus.PAID);
+        orderRepository.save(order);
+        log.info("Commande {} passée au statut PAID", orderId);
+    }
 }
